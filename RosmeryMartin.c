@@ -9,7 +9,7 @@ Shortest Job First (SJF): schedules processes based on arrival time and burst ti
 It reads process details from a file, including process number, arrival time, and burst time. The selected algorithm is executed based on the command-line argument provided.
 
 For each process:
-We anounce the algorithm requested, and proceed to calculate and displayed the completion time, turnaround time, and waiting time.
+We aprocess_numberunce the algorithm requested, and proceed to calculate and displayed the completion time, turnaround time, and waiting time.
 
 As per assignment requirements:
 We conclude by returning the calculated Average turnaround time and Average waiting time
@@ -26,7 +26,7 @@ The file should contain process details in the specified format.
 // Structure to represent a process
 struct Process
 {
-    int no;               // Process number
+    int process_number;   // Process number
     int arrival_time;     // Arrival time of the process
     int burst_time;       // Burst time of the process
     int idle_time;        // Idle time
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     // Read process details from the file
     for (int i = 0; i < n; i++)
     {
-        process[i].no = i + 1;
+        process[i].process_number = i + 1;
         fscanf(file, "%d %d", &process[i].burst_time, &process[i].arrival_time);
     }
 
@@ -94,8 +94,8 @@ void sjf(struct Process process[], int n)
 {
     int j, min = 0;
     float averageTurnAroundTime = 0, averageWaitingTime = 0;
-    struct Process temp;
-    int pOrder[n]; // Array to store the order of execution of processes
+    struct Process temp_process;
+    int process_order[n]; // Array to store the order of execution of processes
 
     // Sort the processes based on their arrival times in ascending order
     for (int i = 0; i < n - 1; i++)
@@ -104,9 +104,9 @@ void sjf(struct Process process[], int n)
         {
             if (process[j].arrival_time > process[j + 1].arrival_time)
             {
-                temp = process[j];
+                temp_process = process[j];
                 process[j] = process[j + 1];
-                process[j + 1] = temp;
+                process[j + 1] = temp_process;
             }
         }
     }
@@ -121,9 +121,9 @@ void sjf(struct Process process[], int n)
     }
 
     // Swap the process with the shortest burst time to the front
-    temp = process[0];
+    temp_process = process[0];
     process[0] = process[min];
-    process[min] = temp;
+    process[min] = temp_process;
     process[0].idle_time = process[0].arrival_time;
     process[0].completion_time = process[0].idle_time + process[0].burst_time;
 
@@ -140,9 +140,9 @@ void sjf(struct Process process[], int n)
         }
 
         // Swap the process with the shortest burst time to its correct position
-        temp = process[i];
+        temp_process = process[i];
         process[i] = process[min];
-        process[min] = temp;
+        process[min] = temp_process;
 
         // Calculate the idle time and completion time of the process
         if (process[i].arrival_time <= process[i - 1].completion_time)
@@ -160,15 +160,15 @@ void sjf(struct Process process[], int n)
         averageTurnAroundTime += process[i].turn_around_time;
         process[i].waiting_time = process[i].turn_around_time - process[i].burst_time;
         averageWaitingTime += process[i].waiting_time;
-        printf("P%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", process[i].no, process[i].arrival_time, process[i].burst_time, process[i].completion_time, process[i].turn_around_time, process[i].waiting_time);
-        pOrder[i] = process[i].no;
+        printf("P%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", process[i].process_number, process[i].arrival_time, process[i].burst_time, process[i].completion_time, process[i].turn_around_time, process[i].waiting_time);
+        process_order[i] = process[i].process_number;
     }
 
     // Print the order of execution of processes
     printf("\nProcess Order: ");
     for (int i = 0; i < n; i++)
     {
-        printf("P%d", pOrder[i]);
+        printf("P%d", process_order[i]);
         if (i != n - 1)
             printf("->");
     }
@@ -182,10 +182,10 @@ void sjf(struct Process process[], int n)
 // Function to implement First-Come, First-Served (FCFS) scheduling algorithm
 void fcfs(struct Process process[], int n)
 {
-    struct Process tmp;
+    struct Process temp_process;
     int completion_time;
     float averageTurnAroundTime = 0, averageWaitingTime = 0;
-    int pOrder[n]; // Array to store the order of execution of processes
+    int process_order[n]; // Array to store the order of execution of processes
 
     // Sort the processes based on their arrival times in ascending order
     for (int i = 0; i < n - 1; i++)
@@ -194,9 +194,9 @@ void fcfs(struct Process process[], int n)
         {
             if (process[j].arrival_time > process[j + 1].arrival_time)
             {
-                tmp = process[j];
+                temp_process = process[j];
                 process[j] = process[j + 1];
-                process[j + 1] = tmp;
+                process[j + 1] = temp_process;
             }
         }
     }
@@ -213,15 +213,15 @@ void fcfs(struct Process process[], int n)
         process[i].waiting_time = process[i].turn_around_time - process[i].burst_time;
         averageWaitingTime += process[i].waiting_time;
 
-        printf("P%-2d\t\t%-2d\t\t%-2d\t\t%-2d\t\t%-2d\t\t%-2d\n", process[i].no, process[i].arrival_time, process[i].burst_time, process[i].completion_time, process[i].turn_around_time, process[i].waiting_time);
-        pOrder[i] = process[i].no;
+        printf("P%-2d\t\t%-2d\t\t%-2d\t\t%-2d\t\t%-2d\t\t%-2d\n", process[i].process_number, process[i].arrival_time, process[i].burst_time, process[i].completion_time, process[i].turn_around_time, process[i].waiting_time);
+        process_order[i] = process[i].process_number;
     }
 
     // Print the order of execution of processes
     printf("\nProcess Order: ");
     for (int i = 0; i < n; i++)
     {
-        printf("P%d", pOrder[i]);
+        printf("P%d", process_order[i]);
         if (i != n - 1)
             printf("->");
     }
